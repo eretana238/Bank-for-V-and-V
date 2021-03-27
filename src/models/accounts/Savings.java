@@ -18,52 +18,71 @@ public class Savings extends Account {
         this.interestRate = interestRate;
     }
 
+    public int getTransactionLimit() {
+        return transactionLimit;
+    }
+
+    public void setTransactionLimit(int transactionLimit) {
+        this.transactionLimit = transactionLimit;
+    }
+
+    public double getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(double interestRate) {
+        this.interestRate = interestRate;
+    }
+
     @Override
     public boolean deposit(double amount) {
-        if (super.deposit(amount)) {
+        boolean isSuccessful = super.deposit(amount);
+        if (isSuccessful) {
             this.transactionLimit--;
-            return true;
         }
-        if (this.transactionLimit <= 0) {
+        if (this.transactionLimit < 0) {
             chargeTransactionFee();
         }
-        return false;
+        return isSuccessful;
     }
 
     @Override
     public boolean withdraw(double amount) {
-        if (super.withdraw(amount)) {
+        boolean isSuccessful = super.withdraw(amount);
+
+        if (isSuccessful) {
             this.transactionLimit--;
-            return true;
         }
-        if (this.transactionLimit <= 0) {
+        if (this.transactionLimit < 0) {
             chargeTransactionFee();
         }
-        return false;
+        return isSuccessful;
     }
 
     @Override
     public boolean transfer(Account destination, double amount) {
-        if (super.transfer(destination, amount)) {
+        boolean isSuccessful = super.transfer(destination,amount);
+
+        if (isSuccessful) {
             this.transactionLimit--;
-            return true;
         }
-        if (this.transactionLimit <= 0) {
+        if (this.transactionLimit < 0) {
             chargeTransactionFee();
         }
 
-        return false;
+        return isSuccessful;
     }
 
     public void calculateInterest() {
         double principle = super.getAccountBalance();
 
-        double amount = principle * Math.pow(1 + (this.interestRate / 365), 365 * 1);
+        double amount = principle * Math.pow(1 + (this.interestRate / 365), 365);
         this.setAccountBalance(amount);
     }
 
     public void chargeTransactionFee() {
         this.setAccountBalance(this.getAccountBalance() - 50);
     }
+
 
 }
